@@ -2,33 +2,42 @@ CC	= arm-linux-gnueabihf-gcc
 CFLAGS	= -O1 -Wall
 LDFLAGS = -fno-stack-protector
 
-objects	= fibseq.o fib.o
+SRC_DIR = .
+BUILD_DIR = build
+
+SRCS = $(wildcard $(SRC_DIR)/*.c)
+SRCS += $(wildcard $(SRC_DIR)/*.s)
+OBJS = $(addprefix $(BUILD_DIR)/, $(SRCS))
+OBJS := $(OBJS:.c=.o)
+OBJS := $(OBJS:.s=.o)
+
+MAIN_OBJ = $(BUILD_DIR)/$(SRC_DIR)/fibseq.o
+
+GCC_PATH = ../../gcc-linaro-4.9-2014.11-x86_64_arm-linux-gnueabihf/libc
+QEMU_CMD = qemu-arm -L $(GCC_PATH) $(1)
 
 default: fibseq
 
+include mk/test.mk
+
 .PHONY: default clean qemu
 
-fibseq: $(objects)
-	$(CC) $(LDFLAGS) -o $@ $^
+fibseq: $(OBJS)
+	@$(CC) $(LDFLAGS) -o $@ $^
+	@echo "     LD     $(notdir $@)"
 
-fib.o: fib.s
-fibseq.o: fibseq.c
+$(BUILD_DIR)/%.o: %.c
+	@mkdir -p $(dir $@)
+	@$(CC) -c $(CFLAGS) -o $@ $<
+	@echo "     CC     $(notdir $@)"
 
-%.o: %.c
-	$(CC) -c $(CFLAGS) -o $@ $<
-
-%.o: %.s
-	$(CC) -c $(CFLAGS) -o $@ $<
+$(BUILD_DIR)/%.o: %.s
+	@mkdir -p $(dir $@)
+	@$(CC) -c $(CFLAGS) -o $@ $<
+	@echo "     CC     $(notdir $@)"
 
 clean:
-	rm -f $(objects) fibseq
+	@rm -frv $(BUILD_DIR) fibseq
 
-QEMU_CMD = qemu-arm -L /usr/arm-linux-gnueabihf ./fibseq &
-CMD = yes 9 | $(call QEMU_CMD) && sleep 1
 qemu: fibseq
-	@yes 5 | $(call QEMU_CMD)
-	@sleep 1
-	@yes 6 | $(call QEMU_CMD)
-	@sleep 1
-	@yes 7 | $(call QEMU_CMD)
-	@sleep 1
+	@$(call QEMU_CMD, $<)
