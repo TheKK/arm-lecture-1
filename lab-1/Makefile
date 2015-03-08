@@ -37,7 +37,7 @@ $(BUILD_DIR)/%.o: %.s
 	@echo "     CC     $(notdir $@)"
 
 clean:
-	@rm -frv $(BUILD_DIR) fibseq
+	@rm -frv $(BUILD_DIR) fibseq test_runner
 
 qemu: fibseq
 	@$(call QEMU_CMD, $<)
