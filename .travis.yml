@@ -12,5 +12,5 @@ script:
         - cd lab-1
         - git submodule foreach git pull origin master
         - make
-        - make doTest
+        - make doTest GCC_PATH=/usr/arm-linux-gnueabihf
         - cd ..
