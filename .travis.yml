@@ -5,7 +5,7 @@ compiler: gcc
 
 install:
         - sudo apt-get update
-        - sudo apt-get install gcc-arm-linux-gnueabihf g++-arm-linux-gnueabihf qemu-user qemu-system-arm build-essential git-core
+        - sudo apt-get install gcc-arm-linux-gnueabihf g++-arm-linux-gnueabihf qemu-user qemu-system build-essential git-core
 
 script:
         # lab-1
