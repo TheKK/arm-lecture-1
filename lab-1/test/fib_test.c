@@ -5,11 +5,13 @@ extern int fibonacci(int x);
 TEST
 test_fib()
 {
-	ASSERT_EQ(0, fibonacci(0));
-	ASSERT_EQ(1, fibonacci(1));
-	/*ASSERT_EQ(6, fibonacci(8));*/
-	/*ASSERT_EQ(15, fibonacci(610));*/
-	/*ASSERT_EQ(20, fibonacci(6765));*/
+	ASSERT_EQ(fibonacci(0), 0);
+	ASSERT_EQ(fibonacci(1), 1);
+	ASSERT_EQ(fibonacci(6), 8);
+	ASSERT_EQ(fibonacci(15), 610);
+	ASSERT_EQ(fibonacci(20), 6765);
+
+	ASSERT_EQ(fibonacci(-123), 0);
 
 	PASS();
 }
